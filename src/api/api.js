@@ -19,7 +19,8 @@ export const $fetch = async (
 		headers,
 		body: requestBody,
 	})
-	const payload = await response.json()
+
+	const payload = contentType ? await response.json() : null
 	if (response.ok) {
 		return {
 			success: true,

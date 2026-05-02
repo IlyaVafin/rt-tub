@@ -1,10 +1,25 @@
-import React, { useState } from "react"
-import { Link } from "react-router"
+import { useState } from "react"
+import { Link, useNavigate } from "react-router"
 import { useUserContext } from "../context/UserContextProvider"
+import { $fetch } from "../api/api"
 
 const Header = () => {
-	const { user } = useUserContext()
+	const { user, toggleUser } = useUserContext()
 	const [show, setShow] = useState(false)
+
+	const navigate = useNavigate()
+
+	const logout = async () => {
+		const result = await $fetch("logout", "GET", undefined, false)
+		console.log(result)
+
+		if (result.success) {
+			toggleUser(false)
+			localStorage.removeItem("token")
+			navigate("/login")
+		}
+	}
+
 	return (
 		<nav className='navbar navbar-expand-lg fixed-top'>
 			<div className='container'>
@@ -29,41 +44,45 @@ const Header = () => {
 						</div>
 					)}
 
-					<div className='d-flex align-items-center' id='user-menu'>
-						<div className='dropdown'>
-							<button
-								onClick={() => setShow(prev => !prev)}
-								className='btn btn-outline-primary dropdown-toggle'
-								type='button'
-								data-bs-toggle='dropdown'
-							>
-								<i className='bi bi-person-circle me-1'></i> User123
-							</button>
-							<ul
-								style={{ display: show ? "block !important" : "" }}
-								className='dropdown-menu'
-							>
-								<li>
-									<a className='dropdown-item' href='my_channel.html'>
-										<i className='bi bi-person me-2'></i> Мой канал
-									</a>
-								</li>
-								<li>
-									<a className='dropdown-item' href='create_video.html'>
-										<i className='bi bi-upload me-2'></i> Загрузить видео
-									</a>
-								</li>
-								<li>
-									<hr className='dropdown-divider' />
-								</li>
-								<li>
-									<a className='dropdown-item text-danger' href='#'>
-										<i className='bi bi-box-arrow-right me-2'></i> Выйти
-									</a>
-								</li>
-							</ul>
+					{user && (
+						<div className='d-flex align-items-center' id='user-menu'>
+							<div className='dropdown'>
+								<button
+									onClick={() => setShow(prev => !prev)}
+									className='btn btn-outline-primary dropdown-toggle'
+									type='button'
+								>
+									<i className='bi bi-person-circle me-1'></i> User123
+								</button>
+								<ul
+									style={{ display: show ? "block" : "" }}
+									className='dropdown-menu'
+								>
+									<li>
+										<Link className='dropdown-item' to='/profile'>
+											<i className='bi bi-person me-2'></i> Мой канал
+										</Link>
+									</li>
+									<li>
+										<Link className='dropdown-item' to='/create-video'>
+											<i className='bi bi-upload me-2'></i> Загрузить видео
+										</Link>
+									</li>
+									<li>
+										<hr className='dropdown-divider' />
+									</li>
+									<li>
+										<button
+											className='dropdown-item text-danger'
+											onClick={logout}
+										>
+											<i className='bi bi-box-arrow-right me-2'></i> Выйти
+										</button>
+									</li>
+								</ul>
+							</div>
 						</div>
-					</div>
+					)}
 				</div>
 			</div>
 		</nav>
