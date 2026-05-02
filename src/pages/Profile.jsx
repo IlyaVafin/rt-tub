@@ -1,10 +1,8 @@
-import { useParams } from "react-router"
 
 const Profile = () => {
-	const params = useParams()
-	console.log(params)
-
-	return <div></div>
+  return (
+    <div>Channel</div>
+  )
 }
 
 export default Profile

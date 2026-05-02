@@ -121,7 +121,10 @@ const Home = () => {
 											<div className='d-flex'>
 												<div className='flex-grow-1'>
 													<h6 className='video-title mb-1'>{v.name}</h6>
-													<a href='other_channel.html' className='video-author'>
+													<a
+														href={`/channel/${v.author}`}
+														className='video-author'
+													>
 														{v.author}
 													</a>
 													<div className='video-meta'>
