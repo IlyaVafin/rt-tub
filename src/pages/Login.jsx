@@ -2,9 +2,11 @@ import { useState } from "react"
 import { Link, useNavigate } from "react-router"
 import { $fetch } from "../api/api"
 import Header from "../components/Header"
+import { useUserContext } from "../context/UserContextProvider"
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({ email: "", password: "" })
+	const { toggleUser } = useUserContext()
 	const navigate = useNavigate()
 	const handleInput = (key, value) => {
 		setLoginData(prev => ({ ...prev, [key]: value }))
@@ -20,6 +22,7 @@ const Login = () => {
 			}),
 		)
 		if (result.success) {
+			toggleUser(true)
 			localStorage.setItem("token", result.data.credentials.token)
 			navigate("/")
 		}
