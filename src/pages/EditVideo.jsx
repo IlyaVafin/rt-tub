@@ -1,15 +1,21 @@
 import { useEffect, useState } from "react"
+import { useNavigate, useParams } from "react-router"
 import { $fetch } from "../api/api"
-import { useParams } from "react-router"
 
 const EditVideo = () => {
 	const [video, setVideo] = useState()
+	const [loading, setLoading] = useState(true)
+	const navigate = useNavigate()
 	const params = useParams()
 	useEffect(() => {
 		async function getVideo() {
-			const result = await $fetch(`videos/${params.videoId}`)
-			if (result.success) {
-				setVideo(result.data.data.video)
+			try {
+				const result = await $fetch(`videos/${params.videoId}`)
+				if (result.success) {
+					setVideo(result.data.data.video)
+				}
+			} finally {
+				setLoading(false)
 			}
 		}
 		getVideo()
@@ -21,9 +27,17 @@ const EditVideo = () => {
 		const result = await $fetch(`videos/${video.id}`, "PATCH", data, false)
 		if (result.success) alert("success")
 	}
+	if (loading) return <p>Loading...</p>
+
 	return (
 		<div id='edit-video-page' className='page'>
 			<div className='container py-4'>
+				{!video && (
+					<div>
+						<h1>Видео находиться на модерации или не найдено</h1>
+						<button onClick={() => navigate(-1)}>Вернуться назад</button>
+					</div>
+				)}
 				{video && (
 					<div className='row justify-content-center'>
 						<div className='col-lg-8'>
@@ -49,9 +63,8 @@ const EditVideo = () => {
 											name='description'
 											className='form-control'
 											rows='4'
-										>
-											{video.description ?? ""}
-										</textarea>
+											defaultValue={video.description ?? ""}
+										></textarea>
 									</div>
 
 									<div className='row mb-3'>

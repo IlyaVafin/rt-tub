@@ -1,16 +1,24 @@
-import { useNavigate } from "react-router"
+import { useState } from "react"
 import { $fetch } from "../api/api"
+import { formatValidationErrors } from "../api/formatValidationErrors"
 import Header from "../components/Header"
 
 const CreateVideo = () => {
-	const navigate = useNavigate()
-
+	const [errors, setErorrs] = useState()
 	async function submitVideo(e) {
 		e.preventDefault()
 		const data = new FormData(e.target)
 		const result = await $fetch("videos", "POST", data, false)
-		if (result.success) navigate("/")
+		if (!result.success) {
+			console.log(result.data)
+			const err = formatValidationErrors(result.data)
+			setErorrs(err)
+		}
 	}
+
+	const hasNameError = errors?.name || undefined
+	const hasDescriptionError = errors?.description || undefined
+	const hasVideoError = errors?.video || undefined
 	return (
 		<>
 			<Header />
@@ -27,20 +35,28 @@ const CreateVideo = () => {
 										<input
 											name='name'
 											type='text'
-											className='form-control'
+											className={`form-control ${hasNameError ? "is-invalid" : ""}`}
 											placeholder='Введите название видео'
 										/>
+										{hasNameError && (
+											<span className='invalid-feedback'>{hasNameError}</span>
+										)}
 									</div>
 
 									<div className='mb-3'>
 										<label className='form-label'>Описание</label>
 										<textarea
 											name='description'
-											className='form-control'
+											className={`form-control ${hasDescriptionError ? "is-invalid" : ""}`}
 											rows='4'
 											placeholder='Опишите содержание вашего видео'
 											required
 										></textarea>
+										{hasDescriptionError && (
+											<span className='invalid-feedback'>
+												{hasDescriptionError}
+											</span>
+										)}
 									</div>
 
 									<div className='row mb-3'>
@@ -58,9 +74,14 @@ const CreateVideo = () => {
 											<input
 												name='video'
 												type='file'
-												className='form-control'
+												className={`form-control ${hasVideoError ? "is-invalid" : ""}`}
 												accept='video/*'
 											/>
+											{hasVideoError && (
+												<span className='invalid-feedback'>
+													{hasVideoError}
+												</span>
+											)}
 										</div>
 									</div>
 

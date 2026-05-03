@@ -138,6 +138,12 @@ function Modal({ showModal, closeModal, profile }) {
 
 	async function submitDonate(e) {
 		e.preventDefault()
+		const result = await $fetch(
+			`channels/${profile.profile.nickname}`,
+			"POST",
+			JSON.stringify({ sum: Number(sum) }),
+		)
+		console.log(result.data)
 	}
 	return (
 		<div

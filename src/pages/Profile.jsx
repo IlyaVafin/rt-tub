@@ -93,7 +93,7 @@ const Profile = () => {
 										{profile.videos.map(v => (
 											<div key={v.id} className='col'>
 												<div className='video-card'>
-													<a href='video.html'>
+													<a href={`/video/${v.id}`}>
 														<img
 															src={v.preview}
 															className='video-thumbnail'

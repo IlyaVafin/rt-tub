@@ -1,13 +1,6 @@
 export const formatValidationErrors = error => {
-	const errors = {}
-	const keys = Object.keys(error["errors"])
-	const values = Object.values(error["errors"])
-	for (let k of keys) {
-		for (let value of values) {
-			for (let v of value) {
-				errors[k] = v
-			}
-		}
-	}
+	const errors = error.errors
+	for (let key in errors) errors[key] = errors[key][0]
+
 	return errors
 }
