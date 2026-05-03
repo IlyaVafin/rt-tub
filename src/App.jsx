@@ -8,17 +8,21 @@ import AuthGuard from "./AuthGuard"
 import CreateVideo from "./pages/CreateVideo"
 import Profile from "./pages/Profile"
 import Channel from "./pages/Channel"
+import Video from "./pages/Video"
 const App = () => {
 	return (
 		<>
 			<Routes>
-				<Route element={<AuthGuard auth={false} />}>
-					<Route path='/' element={<Home />} />
-					<Route path='/profile/:profileId' element={<Profile />} />
-					<Route path='/channel/:nickname' element={<Channel />} />
+				<Route element={<AuthGuard redirect={true} />}>
+					<Route path='/profile/:nickname' element={<Profile />} />
 					<Route path='/login' element={<Login />} />
 					<Route path='/register' element={<Register />} />
 					<Route path='/create-video' element={<CreateVideo />} />
+				</Route>
+				<Route element={<AuthGuard redirect={false} />}>
+					<Route path='/channel/:nickname' element={<Channel />} />
+					<Route path='/video/:videoId' element={<Video />} />
+					<Route path='/' element={<Home />} />
 				</Route>
 			</Routes>
 		</>

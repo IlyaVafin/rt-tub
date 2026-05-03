@@ -3,7 +3,7 @@ import { createContext, useCallback, useContext, useState } from "react"
 const UserContext = createContext(null)
 
 export const UserContextProvider = ({ children }) => {
-	const [user, setUser] = useState(false)
+	const [user, setUser] = useState({ auth: false, user: null })
 	const toggleUser = useCallback(val => setUser(val), [])
 	return (
 		<UserContext.Provider value={{ user, toggleUser }}>

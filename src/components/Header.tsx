@@ -11,10 +11,9 @@ const Header = () => {
 
 	const logout = async () => {
 		const result = await $fetch("logout", "GET", undefined, false)
-		console.log(result)
 
 		if (result.success) {
-			toggleUser(false)
+			toggleUser({ auth: false, user: null })
 			localStorage.removeItem("token")
 			navigate("/login")
 		}
@@ -27,13 +26,13 @@ const Header = () => {
 					className='align-items-center w-100 d-flex justify-content-between gap-xxl-4'
 					id='navbarNav'
 				>
-					<a href='index.html' className='sidebar-brand'>
+					<Link to='/' className='sidebar-brand'>
 						<h2>
 							R<span className='brand-accent'>Tub</span>
 						</h2>
-					</a>
+					</Link>
 
-					{!user && (
+					{!user.auth && (
 						<div className='d-flex align-items-center' id='auth-buttons'>
 							<Link to='/login' className='btn btn-outline-primary me-2'>
 								Войти
@@ -44,7 +43,7 @@ const Header = () => {
 						</div>
 					)}
 
-					{user && (
+					{user.auth && (
 						<div className='d-flex align-items-center' id='user-menu'>
 							<div className='dropdown'>
 								<button
@@ -52,14 +51,15 @@ const Header = () => {
 									className='btn btn-outline-primary dropdown-toggle'
 									type='button'
 								>
-									<i className='bi bi-person-circle me-1'></i> User123
+									<i className='bi bi-person-circle me-1'></i>{" "}
+									{user.user.nickname}
 								</button>
 								<ul
 									style={{ display: show ? "block" : "" }}
 									className='dropdown-menu'
 								>
 									<li>
-										<Link className='dropdown-item' to='/profile'>
+										<Link className='dropdown-item' to={`/profile/${user.user.nickname}`}>
 											<i className='bi bi-person me-2'></i> Мой канал
 										</Link>
 									</li>

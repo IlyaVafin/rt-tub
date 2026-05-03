@@ -16,7 +16,13 @@ const Register = () => {
 		const result = await $fetch("registration", "POST", data, false)
 		if (result.success) {
 			localStorage.setItem("token", result.data.data.credentials.token)
-			toggleUser(true)
+			toggleUser({
+				auth: true,
+				user: {
+					nickname: result.data.data.user.nickname,
+					avatar: result.data.data.user.avatar,
+				},
+			})
 			return navigate("/")
 		} else {
 			setErrors(result.data)

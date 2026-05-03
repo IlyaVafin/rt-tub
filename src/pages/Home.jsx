@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react"
 import { $fetch } from "../api/api"
 import Header from "../components/Header"
+import { Link } from "react-router"
 
 const Home = () => {
 	const [videos, setVideos] = useState()
@@ -109,13 +110,13 @@ const Home = () => {
 								<div key={v.id} className='col'>
 									<div className='video-card h-100'>
 										<div className='position-relative'>
-											<a href='video.html'>
+											<Link to={`/video/${v.id}`}>
 												<img
 													src={v.preview}
 													className='video-thumbnail'
 													alt='Превью видео'
 												/>
-											</a>
+											</Link>
 										</div>
 										<div className='video-info'>
 											<div className='d-flex'>

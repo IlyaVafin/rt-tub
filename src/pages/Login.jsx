@@ -22,8 +22,9 @@ const Login = () => {
 			}),
 		)
 		if (result.success) {
-			toggleUser(true)
 			localStorage.setItem("token", result.data.credentials.token)
+			const userInfo = await $fetch("me")
+			toggleUser({ auth: true, user: userInfo.data.data.profile })
 			navigate("/")
 		}
 	}
