@@ -143,7 +143,6 @@ function Modal({ showModal, closeModal, profile }) {
 			"POST",
 			JSON.stringify({ sum: Number(sum) }),
 		)
-		console.log(result.data)
 	}
 	return (
 		<div

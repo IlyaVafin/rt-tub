@@ -15,7 +15,6 @@ const Register = () => {
 		const data = new FormData(e.target)
 
 		const result = await $fetch("registration", "POST", data, false)
-		console.log(result)
 
 		if (result.success) {
 			localStorage.setItem("token", result.data.data.credentials.token)

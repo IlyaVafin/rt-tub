@@ -15,7 +15,6 @@ const Video = () => {
 		}
 		getVideo()
 	}, [params])
-	console.log(video)
 
 	return (
 		<>

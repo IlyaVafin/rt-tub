@@ -10,7 +10,6 @@ const CreateVideo = () => {
 		const data = new FormData(e.target)
 		const result = await $fetch("videos", "POST", data, false)
 		if (!result.success) {
-			console.log(result.data)
 			const err = formatValidationErrors(result.data)
 			setErorrs(err)
 		}
