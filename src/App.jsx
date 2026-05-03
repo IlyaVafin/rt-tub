@@ -9,6 +9,7 @@ import CreateVideo from "./pages/CreateVideo"
 import Profile from "./pages/Profile"
 import Channel from "./pages/Channel"
 import Video from "./pages/Video"
+import EditVideo from "./pages/EditVideo"
 const App = () => {
 	return (
 		<>
@@ -18,6 +19,7 @@ const App = () => {
 					<Route path='/login' element={<Login />} />
 					<Route path='/register' element={<Register />} />
 					<Route path='/create-video' element={<CreateVideo />} />
+					<Route path='/update-video/:videoId' element={<EditVideo />} />
 				</Route>
 				<Route element={<AuthGuard redirect={false} />}>
 					<Route path='/channel/:nickname' element={<Channel />} />

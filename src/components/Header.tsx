@@ -10,7 +10,7 @@ const Header = () => {
 	const navigate = useNavigate()
 
 	const logout = async () => {
-		const result = await $fetch("logout", "GET", undefined, false)
+		const result = await $fetch("logout", "GET", undefined, false, false)
 
 		if (result.success) {
 			toggleUser({ auth: false, user: null })
@@ -59,7 +59,10 @@ const Header = () => {
 									className='dropdown-menu'
 								>
 									<li>
-										<Link className='dropdown-item' to={`/profile/${user.user.nickname}`}>
+										<Link
+											className='dropdown-item'
+											to={`/profile/${user.user.nickname}`}
+										>
 											<i className='bi bi-person me-2'></i> Мой канал
 										</Link>
 									</li>

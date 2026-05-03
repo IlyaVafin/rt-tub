@@ -2,12 +2,15 @@ import { useEffect, useState } from "react"
 import { useParams } from "react-router"
 import { $fetch } from "../api/api"
 import Header from "../components/Header"
+import { createPortal } from "react-dom"
 
 const Channel = () => {
 	const params = useParams()
 	const nickname = params.nickname
 	const [profile, setProfile] = useState()
 	const [currentPage, setCurrentPage] = useState(1)
+	const [showModal, setShowModal] = useState(false)
+
 	useEffect(() => {
 		async function getProfile() {
 			const result = await $fetch(`channels/${nickname}?page=${currentPage}`)
@@ -15,6 +18,7 @@ const Channel = () => {
 		}
 		getProfile()
 	}, [nickname, currentPage])
+
 	return (
 		<>
 			<Header />
@@ -55,6 +59,7 @@ const Channel = () => {
 									</div>
 
 									<button
+										onClick={() => setShowModal(true)}
 										className='btn btn-primary mt-3'
 										data-bs-toggle='modal'
 										data-bs-target='#donateModal'
@@ -115,7 +120,101 @@ const Channel = () => {
 					</nav>
 				</div>
 			</div>
+			{showModal &&
+				createPortal(
+					<Modal
+						profile={profile.data}
+						showModal={showModal}
+						closeModal={() => setShowModal(false)}
+					/>,
+					document.body,
+				)}
 		</>
+	)
+}
+
+function Modal({ showModal, closeModal, profile }) {
+	const [sum, setSum] = useState("")
+
+	async function submitDonate(e) {
+		e.preventDefault()
+	}
+	return (
+		<div
+			style={{
+				display: showModal ? "block" : "",
+				opacity: showModal ? "1" : "0",
+				background: "rgba(0,0,0, 0.5)",
+			}}
+			className='modal fade'
+			id='donateModal'
+			tabIndex='-1'
+		>
+			<div
+				style={{
+					height: "100%",
+					display: "flex",
+					justifyContent: "center",
+					alignItems: "center",
+				}}
+				className='modal-dialog'
+			>
+				<div className='modal-content'>
+					<div className='modal-header'>
+						<h5 className='modal-title fw-bold'>Поддержать канал</h5>
+						<button
+							onClick={closeModal}
+							type='button'
+							className='btn-close'
+							data-bs-dismiss='modal'
+						></button>
+					</div>
+					<div className='modal-body'>
+						<p className='mb-3'>
+							Введите сумму для канала{" "}
+							<strong>{profile.profile.nickname}</strong>
+						</p>
+
+						<form onSubmit={submitDonate} id='donate-form'>
+							<div className='mb-3'>
+								<label className='form-label'>Сумма (RUB)</label>
+								<input
+									value={sum}
+									onChange={e => setSum(e.target.value)}
+									type='number'
+									className='form-control'
+									min='1'
+									max='1000'
+									step='0.01'
+									placeholder='10.00'
+									required
+								/>
+							</div>
+
+							<div id='payment-link' className='alert alert-light d-none'>
+								<h6 className='fw-bold'>Ссылка для оплаты:</h6>
+								<a href='#' className='text-break'>
+									https://payment.example.com/pay/abc123xyz
+								</a>
+							</div>
+
+							<div className='d-grid'>
+								<button type='submit' className='btn btn-primary'>
+									Отправить
+								</button>
+							</div>
+
+							<div>
+								Ссылка на оплату:{" "}
+								<a href='' target='_blank'>
+									link
+								</a>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
 	)
 }
 

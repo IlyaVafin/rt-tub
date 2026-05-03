@@ -3,14 +3,18 @@ import { Link, useNavigate } from "react-router"
 import { $fetch } from "../api/api"
 import Header from "../components/Header"
 import { useUserContext } from "../context/UserContextProvider"
+import { formatValidationErrors } from "../api/formatValidationErrors"
 
 const Login = () => {
 	const [loginData, setLoginData] = useState({ email: "", password: "" })
+	const [errors, setErrors] = useState()
 	const { toggleUser } = useUserContext()
 	const navigate = useNavigate()
+
 	const handleInput = (key, value) => {
 		setLoginData(prev => ({ ...prev, [key]: value }))
 	}
+
 	const onSubmit = async e => {
 		e.preventDefault()
 		const result = await $fetch(
@@ -26,9 +30,13 @@ const Login = () => {
 			const userInfo = await $fetch("me")
 			toggleUser({ auth: true, user: userInfo.data.data.profile })
 			navigate("/")
+		} else {
+			const err = formatValidationErrors(result.data)
+			setErrors(err)
 		}
 	}
-
+	const hasPasswordError = errors?.password || undefined
+	const hasEmailError = errors?.email || undefined
 	return (
 		<>
 			<Header />
@@ -44,9 +52,12 @@ const Login = () => {
 								value={loginData.email}
 								onChange={e => handleInput("email", e.target.value)}
 								type='email'
-								className='form-control'
+								className={`form-control ${hasEmailError ? "is-invalid" : ""}`}
 								placeholder='example@mail.com'
 							/>
+							{hasEmailError && (
+								<span className='invalid-feedback'>{errors.email}</span>
+							)}
 						</div>
 
 						<div className='mb-4'>
@@ -55,8 +66,11 @@ const Login = () => {
 								value={loginData.password}
 								onChange={e => handleInput("password", e.target.value)}
 								type='password'
-								className='form-control'
+								className={`form-control ${hasPasswordError ? "is-invalid" : ""}`}
 							/>
+							{hasPasswordError && (
+								<span className='invalid-feedback'>{errors.password}</span>
+							)}
 						</div>
 
 						<div className='d-grid mb-3'>

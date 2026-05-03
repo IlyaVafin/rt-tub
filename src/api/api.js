@@ -3,6 +3,7 @@ export const $fetch = async (
 	method = "GET",
 	body = undefined,
 	contentType = true,
+	hasAnswer = true,
 ) => {
 	const url = new URL(`http://localhost:8000/api-rtub/${route}`)
 
@@ -20,7 +21,7 @@ export const $fetch = async (
 		body: requestBody,
 	})
 
-	const payload = contentType ? await response.json() : null
+	const payload = hasAnswer ? await response.json() : null
 	if (response.ok) {
 		return {
 			success: true,

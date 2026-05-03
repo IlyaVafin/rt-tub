@@ -3,6 +3,7 @@ import { $fetch } from "../api/api"
 import { useState } from "react"
 import { useUserContext } from "../context/UserContextProvider"
 import Header from "../components/Header"
+import { formatValidationErrors } from "../api/formatValidationErrors"
 
 const Register = () => {
 	const navigate = useNavigate()
@@ -14,6 +15,8 @@ const Register = () => {
 		const data = new FormData(e.target)
 
 		const result = await $fetch("registration", "POST", data, false)
+		console.log(result)
+
 		if (result.success) {
 			localStorage.setItem("token", result.data.data.credentials.token)
 			toggleUser({
@@ -25,9 +28,14 @@ const Register = () => {
 			})
 			return navigate("/")
 		} else {
-			setErrors(result.data)
+			const err = formatValidationErrors(result.data)
+			setErrors(err)
 		}
 	}
+	const hasEmailError = errors?.email || undefined
+	const hasPasswordError = errors?.password || undefined
+	const hasBirthDateError = errors?.birthdate || undefined
+
 	return (
 		<>
 			<Header />
@@ -52,19 +60,36 @@ const Register = () => {
 							<input
 								name='email'
 								type='email'
-								className='form-control'
+								className={`form-control ${hasEmailError ? "is-invalid" : ""}`}
 								placeholder='example@mail.com'
 							/>
+							{hasEmailError && (
+								<span className='invalid-feedback'>{errors.email}</span>
+							)}
 						</div>
 
 						<div className='mb-3'>
 							<label className='form-label'>Пароль</label>
-							<input name='password' type='password' className='form-control' />
+							<input
+								name='password'
+								type='password'
+								className={`form-control ${hasPasswordError ? "is-invalid" : ""}`}
+							/>
+							{hasPasswordError && (
+								<span className='invalid-feedback'>{errors.password}</span>
+							)}
 						</div>
 
 						<div className='mb-3'>
 							<label className='form-label'>Дата рождения</label>
-							<input name='birthdate' type='date' className='form-control' />
+							<input
+								name='birthdate'
+								type='date'
+								className={`form-control ${hasBirthDateError ? "is-invalid" : ""}`}
+							/>
+							{hasBirthDateError && (
+								<span className='invalid-feedback'>{errors.birthdate}</span>
+							)}
 						</div>
 
 						<div className='mb-4'>
