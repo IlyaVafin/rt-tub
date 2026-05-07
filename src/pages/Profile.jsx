@@ -183,7 +183,7 @@ const Profile = () => {
 									)}
 
 									<h4 className='fw-bold mb-3'>Все донаты</h4>
-									{profile.donations > 0 ? (
+									{profile.donations.length > 0 ? (
 										profile.donations.map(d => (
 											<div
 												key={d.id}
