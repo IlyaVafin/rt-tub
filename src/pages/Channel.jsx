@@ -10,7 +10,6 @@ const Channel = () => {
 	const [profile, setProfile] = useState()
 	const [currentPage, setCurrentPage] = useState(1)
 	const [showModal, setShowModal] = useState(false)
-
 	useEffect(() => {
 		async function getProfile() {
 			const result = await $fetch(`channels/${nickname}?page=${currentPage}`)
@@ -135,7 +134,7 @@ const Channel = () => {
 
 function Modal({ showModal, closeModal, profile }) {
 	const [sum, setSum] = useState("")
-
+	const [link, setLink] = useState()
 	async function submitDonate(e) {
 		e.preventDefault()
 		const result = await $fetch(
@@ -143,6 +142,9 @@ function Modal({ showModal, closeModal, profile }) {
 			"POST",
 			JSON.stringify({ sum: Number(sum) }),
 		)
+		if (result.success) {
+			setLink(result.data.pay_url)
+		}
 	}
 	return (
 		<div
@@ -211,7 +213,7 @@ function Modal({ showModal, closeModal, profile }) {
 
 							<div>
 								Ссылка на оплату:{" "}
-								<a href='' target='_blank'>
+								<a href={link ?? ""} target='_blank'>
 									link
 								</a>
 							</div>

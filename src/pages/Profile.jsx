@@ -16,7 +16,7 @@ const Profile = () => {
 	}, [nickname])
 
 	function sortDonations(donations) {
-		return [...donations].sort((a, b) => b.sum - a.sum)
+		return [...donations].sort((a, b) => b.sum - a.sum).slice(0, 3)
 	}
 
 	async function deleteVideo(id) {
@@ -167,14 +167,14 @@ const Profile = () => {
 								<div className='col-lg-4'>
 									<h4 className='fw-bold mb-3'>Топ донатеров</h4>
 									{profile.donations.length > 0 ? (
-										sortDonations(profile.donations).map(v => {
+										sortDonations(profile.donations).map((d, i) => {
 											return (
 												<div
-													key={v.id}
+													key={d.id}
 													className='donator-card d-flex justify-content-between align-items-center'
 												>
-													<div className='text-muted'>1 место - WebFan88</div>
-													<div className='donator-amount'>₽50.00</div>
+													<div className='text-muted'>{i + 1} место - {d.donater}</div>
+													<div className='donator-amount'>₽{d.sum}</div>
 												</div>
 											)
 										})
@@ -189,8 +189,8 @@ const Profile = () => {
 												key={d.id}
 												className='donator-card d-flex justify-content-between align-items-center'
 											>
-												<div className='text-muted'>WebFan88</div>
-												<div className='donator-amount'>₽50.00</div>
+												<div className='text-muted'>{d.donater}</div>
+												<div className='donator-amount'>₽{d.sum}</div>
 											</div>
 										))
 									) : (
